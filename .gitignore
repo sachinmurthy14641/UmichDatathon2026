@@ -1,0 +1,7 @@
+.venv/
+.venv_smoke/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+outputs/
+data/processed/
