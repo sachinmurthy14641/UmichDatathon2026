@@ -30,7 +30,7 @@ def build_outcomes(
             demo_cols.append(c)
     demo = demo[demo_cols].copy()
 
-    out = panel.merge(demo, on=["state", "period"], how="left")
+    out = panel.merge(demo, on=["state", "period"], how="left", suffixes=("", "_demo"))
 
 # --- ECON SECTOR COLUMNS (for structural outcomes) ---
     econ = economics.copy()
@@ -73,7 +73,10 @@ def build_outcomes(
     econ_cols = [c for c in econ_cols if c in econ.columns] + sector_cols
 
     econ = econ[econ_cols].copy()
-    out = out.merge(econ, on=["state", "period"], how="left")
+    out = out.merge(econ, on=["state", "period"], how="left", suffixes=("", "_econ"))
+    #print("out", out.columns)
+    # Drop duplicate columns
+    out = out.loc[:, ~out.columns.duplicated()].copy()
 
  # Private vs government GDP shares 
     if all(c in out.columns for c in ["gdp_total", "gdp_private_total"]):

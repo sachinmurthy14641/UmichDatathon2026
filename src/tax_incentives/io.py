@@ -153,3 +153,8 @@ def load_demographics_csv_annual_expand_to_quarterly(path: Path) -> pd.DataFrame
     # Minimum required for merge/pipeline
     assert_required_columns(out, ["state", "year", "quarter", "period", "population"], "demographics_annual_expanded")
     return out
+
+def write_csv(df: pd.DataFrame, path: str | Path) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False)

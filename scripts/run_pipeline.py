@@ -18,7 +18,7 @@ from tax_incentives.outcomes import build_outcomes
 from tax_incentives.design import add_event_flags, add_exposure_cohort
 from tax_incentives.models_panel import fit_fe_ols
 from tax_incentives.viz import save_line_plot
-
+from tax_incentives.validation import run_step5
 
 def main() -> None:
     paths = get_paths()
@@ -76,6 +76,9 @@ def main() -> None:
     else:
         print(f"Skipping model: missing y={y} or x={x}")
 
+    # Step 5: full validation & synthesis
+    run_step5(design=design, panel=panel, paths=paths)
+
     # ---- Step 5: One quick plot for storytelling ----
     # Plot gdp_per_capita over time for a few states
     plot_df = panel.copy()
@@ -95,3 +98,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+ 
