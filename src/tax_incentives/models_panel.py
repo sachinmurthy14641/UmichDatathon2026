@@ -21,13 +21,18 @@ def fit_fe_ols(
     cols_needed = ["state", "period", y, x] + controls
     data = df[cols_needed].dropna().copy()
 
+    # de-mean x within state to avoid FE collinearity issues
+    x_dm = f"{x}_dm"
+    data[x_dm] = data[x] - data.groupby("state")[x].transform("mean")
+
     # state and period fixed effects via C()
-    rhs = " + ".join([x] + controls + ["C(state)", "C(period)"])
+    rhs = " + ".join([x_dm] + controls + ["C(state)", "C(period)"])
     formula = f"{y} ~ {rhs}"
 
-    model = smf.ols(formula, data=data).fit(cov_type="cluster", cov_kwds={"groups": data["state"]})
+    model = smf.ols(formula, data=data).fit(
+        cov_type="cluster", cov_kwds={"groups": data["state"]}
+    )
 
-    # tidy-ish table
     summary = (
         pd.DataFrame(
             {
@@ -42,3 +47,4 @@ def fit_fe_ols(
         .reset_index(drop=True)
     )
     return summary
+
