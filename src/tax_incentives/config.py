@@ -37,19 +37,38 @@ DEMO_REQUIRED_CANONICAL = ["year", "quarter", "state", "population"]
 ECON_REQUIRED_CANONICAL = ["year", "quarter", "state", "gdp_total", "unemployment_rate"]
 
 
-# ---- Tax bucket mapping (edit for your narrative) ----
+# ---- Tax bucket mapping ----
 # NOTE: these are “revealed signal buckets” (not statutory rates).
 TAX_BUCKETS: Dict[str, str] = {
     "T40": "labor_income",
+    # T22 is a "corporations in general" license tax, more business tax than consumption
     "T41": "corporate_income",
+    "T22": "corporate_income",
+    # T09 consumption tax
     "T09": "general_sales",
+    # T01 is property tax (note: most property taxes are county level and not in this data)
     "T01": "property",
+    # T53 taxation of extraction on non-renewable resources
     "T53": "resource_severance",
-    # add selective excises if you want:
+    # T10 - T18: classic indirect consumption / activity taxes
     "T10": "selective_excise",
     "T13": "selective_excise",
     "T16": "selective_excise",
     "T19": "selective_excise",
+    "T11": "selective_excise",
+    "T12": "selective_excise",
+    "T15": "selective_excise",
+    "T18": "selective_excise",
+    # T20 - T29: license taxes are economically "fees on participation", not capital or labor taxes
+    "T20": "selective_excise",
+    "T21": "selective_excise",
+    "T23": "selective_excise",
+    "T24": "selective_excise",
+    "T25": "selective_excise",
+    "T27": "selective_excise",
+    "T28": "selective_excise",
+    "T29": "selective_excise",
+    # T59 is official census catch-all code for selective / excise taxes
     "T59": "selective_excise",
 }
 
