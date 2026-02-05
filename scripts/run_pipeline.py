@@ -42,7 +42,7 @@ def main() -> None:
     write_csv(signals, paths.data_processed / "tax_signals.csv")
 
     # ---- Step 2: Outcomes ----
-    outcomes = build_outcomes(panel_state_quarter=panel, demographics=demo_q, economics=econ, drift_lag_q=8)
+    outcomes = build_outcomes(panel_state_quarter=panel, demographics=demo_q, economics=econ, tax_signals=signals, drift_lag_q=8)
     write_csv(outcomes, paths.data_processed / "outcomes.csv")
 
     # ---- Step 3: Design table ----
@@ -98,4 +98,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
- 
