@@ -49,4 +49,9 @@ PYTHONPATH=src python scripts/run_pipeline.py
 - data/processed/outcomes.csv
 - data/processed/analysis_design.csv
 - outputs/tables/panel_model_summary.csv
+- outputs/tables/panel_model_summary_all.csv
+- outputs/tables/directionality_significance.csv
 - outputs/figures/gdp_per_capita_sample.png
+
+### Findings & Analysis
+For a summary of findings and analysis, please see the PPT, PDF, and .MD files located in the /docs folder.
