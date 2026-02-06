@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.dates as mdates  # ✅ NEW
 
 from tax_incentives.models_panel import fit_fe_ols
 from tax_incentives.io import write_csv
@@ -48,22 +49,43 @@ def run_step5(design: pd.DataFrame, panel: pd.DataFrame, paths) -> None:
     cohort_col = "cohort_high_exposure"
     event_cols = [c for c in design.columns if c.startswith("event_")]
 
+    # ✅ Convert quarterly period labels like "2005Q1" → datetime
+    design = design.copy()
+    design["period_dt"] = pd.PeriodIndex(design["period"], freq="Q").to_timestamp()
+
     for outcome in outcomes:
         plt.figure(figsize=(8, 5))
+
         for cohort in design[cohort_col].unique():
             cohort_mask = design[cohort_col] == cohort
+
+            # Group by datetime period instead of raw string
             mean_series = (
-                design[cohort_mask].groupby("period")[outcome].mean()
+                design[cohort_mask]
+                .groupby("period_dt")[outcome]
+                .mean()
+                .sort_index()
             )
+
             plt.plot(mean_series.index, mean_series.values, label=f"{cohort}")
+
         plt.title(f"{outcome} by Cohort Over Time")
-        plt.xlabel("Period")
+        plt.xlabel("Year")
         plt.ylabel(outcome)
+
+        # ✅ X-axis ticks every 3 years
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(mdates.YearLocator(3))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+        plt.xticks(rotation=45)
+
         plt.legend()
         plt.tight_layout()
+
         out_path = paths.outputs_figures / f"{outcome}_cohort_plot.png"
         plt.savefig(out_path)
         plt.close()
+
     print("Cohort/event line plots saved.")
 
     # ---- 3. Regression coefficient heatmap ----
